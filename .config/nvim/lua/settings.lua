@@ -1,4 +1,5 @@
 local o = vim.o
+local g = vim.g
 local cmd = vim.cmd
 
 o.mouse = 'a'
@@ -26,6 +27,8 @@ o.hidden = true
 o.list = true
 -- o.listchars = 'tab:»,extends:›,precedes:‹,nbsp:·,trail:·'
 
+g.mapleader = ","
+
 require('onedark').setup {
     style = 'warm'
 }
@@ -39,5 +42,5 @@ cmd [[autocmd BufEnter * set fo-=c fo-=r fo-=o]]
 
 -- 2 spaces for selected filetypes
 cmd [[
-  autocmd FileType xml,html,xhtml,css,scss,typescript,javascript,lua,yaml setlocal shiftwidth=2 tabstop=2
+  autocmd FileType xml,html,xhtml,css,scss,typescript,javascript,typescriptreact,javascriptreact,tsx,jsx,lua,yaml setlocal shiftwidth=2 tabstop=2
 ]]

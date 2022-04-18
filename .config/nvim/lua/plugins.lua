@@ -4,7 +4,6 @@ return require('packer').startup(function()
   use 'wbthomason/packer.nvim'
 
   use 'tpope/vim-fugitive'
-  use 'ctrlpvim/ctrlp.vim'
   use 'leafgarland/typescript-vim'
   use 'vim-airline/vim-airline'
   use 'vim-airline/vim-airline-themes'
@@ -16,15 +15,28 @@ return require('packer').startup(function()
   use 'andrewradev/splitjoin.vim'
 
   use {
-    'w0rp/ale',
-    cmd = 'ALEEnable',
-    config = 'vim.cmd[[ALEEnable]]'
-  }
-  use {
     'nvim-treesitter/nvim-treesitter',
     run = ':TSUpdate'
   }
 
   use 'neovim/nvim-lspconfig'
   use 'navarasu/onedark.nvim'
+
+  use {
+    "folke/trouble.nvim",
+    requires = "kyazdani42/nvim-web-devicons",
+    config = function()
+      require("trouble").setup {}
+    end
+  }
+
+  use 'nvim-lua/plenary.nvim'
+
+  use 'mfussenegger/nvim-lint'
+
+  use {
+    'nvim-telescope/telescope.nvim',
+    requires = { {'nvim-lua/plenary.nvim'} }
+  }
+  use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
 end)
