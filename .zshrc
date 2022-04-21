@@ -16,6 +16,10 @@ coder-session() {
   ssh coder.hammer-default -t 'zsh -ic "tmux -CC attach || tmux new-session -t discord"'
 }
 
+wip() {
+  git commit -m 'wip' --no-verify
+}
+
 alias vi=nvim
 alias vim=nvim
 
