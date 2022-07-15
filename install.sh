@@ -1,5 +1,6 @@
+sudo add-apt-repository ppa:neovim-ppa/unstable
 sudo apt-get update
-sudo apt-get install -y silversearcher-ag
+sudo apt-get install -y silversearcher-ag neovim
 sudo npm install -g typescript typescript-language-server
 sudo npm install -g pyright
 # Temporarily skipping because restore might be borking things
