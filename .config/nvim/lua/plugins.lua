@@ -5,6 +5,7 @@ return require('packer').startup(function()
 
   use 'tpope/vim-fugitive'
   use 'leafgarland/typescript-vim'
+  use 'jose-elias-alvarez/nvim-lsp-ts-utils'
   use 'vim-airline/vim-airline'
   use 'vim-airline/vim-airline-themes'
   use 'pangloss/vim-javascript'
@@ -13,6 +14,8 @@ return require('packer').startup(function()
   use 'ap/vim-css-color'
   use 'mileszs/ack.vim'
   use 'andrewradev/splitjoin.vim'
+  use 'elixir-editors/vim-elixir'
+  use 'rust-lang/rust.vim'
 
   use {
     'nvim-treesitter/nvim-treesitter',

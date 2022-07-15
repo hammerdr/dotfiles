@@ -58,3 +58,20 @@ require('lspconfig')['pyright'].setup {
     }
   }
 }
+
+require('lspconfig').elixirls.setup {
+    cmd = { "/home/discord/.elixirls/language_server.sh" };
+}
+
+require('lspconfig').tsserver.setup {
+  on_attach = function(client, bufnr)
+    on_attach(client, bufnr)
+    local ts_utils = require("nvim-lsp-ts-utils")
+    ts_utils.setup({
+      -- avoid organizing imports
+      always_organize_imports = false,
+    })
+    ts_utils.setup_client(client)
+    vim.api.nvim_buf_set_keymap(bufnr, 'n', 'I', '<cmd>TSLspImportCurrent<CR>', opts)
+  end
+}
