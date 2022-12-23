@@ -16,6 +16,7 @@ return require('packer').startup(function()
   use 'andrewradev/splitjoin.vim'
   use 'elixir-editors/vim-elixir'
   use 'rust-lang/rust.vim'
+  use 'simrat39/rust-tools.nvim'
 
   use {
     'nvim-treesitter/nvim-treesitter',
