@@ -42,6 +42,4 @@ return require('packer').startup(function()
     requires = { {'nvim-lua/plenary.nvim'} }
   }
   use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
-
-  use { 'discord/vim-codeowners' }
 end)
