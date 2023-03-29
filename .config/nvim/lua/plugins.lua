@@ -43,4 +43,15 @@ return require('packer').startup(function()
     requires = { {'nvim-lua/plenary.nvim'} }
   }
   use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
+
+  use {
+    'hrsh7th/nvim-cmp',
+    requires = {
+      {'hrsh7th/cmp-buffer'},
+      {'hrsh7th/cmp-nvim-lsp'},
+    },
+  }
+
+  use { 'nvim-neorg/neorg', run = ':Neorg sync-parsers' }
+  use { 'nvim-neorg/neorg-telescope' }
 end)
