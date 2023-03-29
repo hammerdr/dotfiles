@@ -31,7 +31,7 @@ end
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
-local servers = { 'rust_analyzer', 'tsserver', 'ruff_lsp' }
+local servers = { 'rust_analyzer', 'tsserver' }
 for _, lsp in pairs(servers) do
   require('lspconfig')[lsp].setup {
     on_attach = on_attach,
@@ -58,3 +58,32 @@ require('lspconfig').tsserver.setup {
     vim.api.nvim_buf_set_keymap(bufnr, 'n', 'I', '<cmd>TSLspImportCurrent<CR>', opts)
   end
 }
+
+require('lspconfig')['ruff_lsp'].setup {
+  on_attach = function(client, bufnr)
+    on_attach(client, bufnr)
+    client.resolved_capabilities.hover = false
+  end,
+  flags = {
+    -- This will be the default in neovim 0.7+
+    debounce_text_changes = 150,
+  }
+}
+
+require('lspconfig')['pyright'].setup {
+  on_attach = on_attach,
+  flags = {
+    debounce_text_changes = 150
+  },
+  settings = {
+    python = {
+      analysis = {
+        autoSearchPaths = true,
+        diagnosticMode = "workspace",
+        useLibraryCodeForTypes = true,
+        extraPaths = {'/home/discord/.virtualenvs/discord_api/lib/python3.7/site-packages', '/home/discord/discord/discord_common/py'}
+      }
+    }
+  }
+}
+
