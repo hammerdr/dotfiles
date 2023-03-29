@@ -16,6 +16,7 @@ return require('packer').startup(function()
   use 'andrewradev/splitjoin.vim'
   use 'elixir-editors/vim-elixir'
   use 'rust-lang/rust.vim'
+  use 'simrat39/rust-tools.nvim'
 
   use {
     'nvim-treesitter/nvim-treesitter',
@@ -43,5 +44,15 @@ return require('packer').startup(function()
   }
   use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
 
+  use {
+    'hrsh7th/nvim-cmp',
+    requires = {
+      {'hrsh7th/cmp-buffer'},
+      {'hrsh7th/cmp-nvim-lsp'},
+    },
+  }
+
+  use { 'nvim-neorg/neorg', run = ':Neorg sync-parsers' }
+  use { 'nvim-neorg/neorg-telescope' }
   use { 'discord/vim-codeowners' }
 end)

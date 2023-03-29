@@ -31,7 +31,7 @@ end
 
 -- Use a loop to conveniently call 'setup' on multiple servers and
 -- map buffer local keybindings when the language server attaches
-local servers = { 'rust_analyzer', 'tsserver' }
+local servers = { 'rust_analyzer', 'tsserver', 'ruff_lsp' }
 for _, lsp in pairs(servers) do
   require('lspconfig')[lsp].setup {
     on_attach = on_attach,
@@ -41,23 +41,6 @@ for _, lsp in pairs(servers) do
     }
   }
 end
-
-require('lspconfig')['pyright'].setup {
-  on_attach = on_attach,
-  flags = {
-    debounce_text_changes = 150
-  },
-  settings = {
-    python = {
-      analysis = {
-        autoSearchPaths = true,
-        diagnosticMode = "workspace",
-        useLibraryCodeForTypes = true,
-        extraPaths = {'/home/discord/.virtualenvs/discord_api/lib/python3.7/site-packages', '/home/discord/discord/discord_common/py'}
-      }
-    }
-  }
-}
 
 require('lspconfig').elixirls.setup {
     cmd = { "/home/discord/.elixirls/language_server.sh" };
