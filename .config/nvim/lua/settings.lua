@@ -44,3 +44,14 @@ cmd [[autocmd BufEnter * set fo-=c fo-=r fo-=o]]
 cmd [[
   autocmd FileType xml,html,xhtml,css,scss,typescript,javascript,typescriptreact,javascriptreact,tsx,jsx,lua,yaml setlocal shiftwidth=2 tabstop=2
 ]]
+
+vim.api.nvim_create_user_command('A', function()
+  local ext = vim.fn.expand('%:e')
+  if ext == 'css' then
+    local newfile = vim.fn.expand('%:p:r:r') .. '.tsx'
+    vim.cmd('e ' .. newfile)
+  else
+    local newfile = vim.fn.expand('%:p:r') .. '.module.css'
+    vim.cmd('e ' .. newfile)
+  end
+end, {})
