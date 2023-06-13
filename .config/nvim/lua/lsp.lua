@@ -59,31 +59,7 @@ require('lspconfig').tsserver.setup {
   end
 }
 
-require('lspconfig')['ruff_lsp'].setup {
-  on_attach = function(client, bufnr)
-    on_attach(client, bufnr)
-    client.resolved_capabilities.hover = false
-  end,
-  flags = {
-    -- This will be the default in neovim 0.7+
-    debounce_text_changes = 150,
-  }
-}
-
-require('lspconfig')['pyright'].setup {
-  on_attach = on_attach,
-  flags = {
-    debounce_text_changes = 150
-  },
-  settings = {
-    python = {
-      analysis = {
-        autoSearchPaths = true,
-        diagnosticMode = "workspace",
-        useLibraryCodeForTypes = true,
-        extraPaths = {'/home/discord/.virtualenvs/discord_api/lib/python3.7/site-packages', '/home/discord/discord/discord_common/py'}
-      }
-    }
-  }
+require('lspconfig')['pylsp'].setup {
+  on_attach = on_attach
 }
 
