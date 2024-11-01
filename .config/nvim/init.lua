@@ -1,7 +1,6 @@
 require('plugins')
 require('settings')
 require('lsp')
-require('org')
 require('our_lint')
 require('treesitter')
 require('our_telescope')

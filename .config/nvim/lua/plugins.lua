@@ -55,4 +55,11 @@ return require('packer').startup(function()
   use { 'nvim-neorg/neorg', run = ':Neorg sync-parsers' }
   use { 'nvim-neorg/neorg-telescope' }
   use { 'discord/vim-codeowners' }
+  use { "zbirenbaum/copilot.lua" }
+  use { "zbirenbaum/copilot-cmp", after = { "copilot.lua" } }
+  use { "L3MON4D3/LuaSnip" }
+  use { 'gbrlsnchs/telescope-lsp-handlers.nvim' }
+  use { 'dhruvasagar/vim-table-mode' }
+  use { 'pmizio/typescript-tools.nvim' }
+
 end)

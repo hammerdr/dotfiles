@@ -1,5 +1,6 @@
 require('telescope').setup {}
 require('telescope').load_extension('fzf')
+require('telescope').load_extension('lsp_handlers')
 
 local opts = { noremap=true, silent=true }
 vim.api.nvim_set_keymap('n', '<leader>ff', '<cmd>Telescope find_files<CR>', opts)
