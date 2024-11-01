@@ -1,8 +1,8 @@
 sudo add-apt-repository -y ppa:neovim-ppa/unstable
 sudo apt-get update
 sudo apt-get install -y silversearcher-ag neovim
-sudo npm install -g typescript typescript-language-server
-sudo npm install -g pyright
+sudo $(which npm) install -g typescript typescript-language-server
+sudo $(which npm) install -g pyright
 sudo pip3 install --upgrade pip
 sudo pip3 install python-lsp-server
 sudo pip3 install pylsp-mypy
