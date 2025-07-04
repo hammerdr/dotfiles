@@ -1,5 +1,6 @@
 local cmp = require('cmp')
 local luasnip = require('luasnip')
+local claude_manual = require('claude_manual_completion')
 
 cmp.setup({
   snippet = {
@@ -19,7 +20,17 @@ cmp.setup({
       elseif luasnip.expand_or_jumpable() then
         luasnip.expand_or_jump()
       else
-        fallback()
+        -- Check for double Tab press for Claude completion
+        local last_tab_time = vim.g.last_tab_time or 0
+        local current_time = vim.loop.now()
+        
+        if current_time - last_tab_time < 300 then -- 300ms window for double tap
+          claude_manual.trigger_claude_completion()
+          vim.g.last_tab_time = 0
+        else
+          vim.g.last_tab_time = current_time
+          fallback()
+        end
       end
     end, { 'i', 's' }),
     ['<S-Tab>'] = cmp.mapping(function(fallback)
@@ -33,9 +44,8 @@ cmp.setup({
     end, { 'i', 's' }),
   }),
   sources = cmp.config.sources({
-    { name = 'claude', group_index = 1, priority = 1000 },
-    { name = 'nvim_lsp', group_index = 2 },
-    { name = 'luasnip', group_index = 2 },
+    { name = 'nvim_lsp', group_index = 1 },
+    { name = 'luasnip', group_index = 1 },
   }, {
     { name = 'buffer' },
   })

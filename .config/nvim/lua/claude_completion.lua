@@ -210,4 +210,8 @@ function M.test_completion()
   end
 end
 
+-- Export functions for manual use
+M.get_completion_context = get_completion_context
+M.get_claude_completion = get_claude_completion
+
 return M

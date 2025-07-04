@@ -9,6 +9,9 @@ require('claude_completion').setup({
   min_trigger_length = 2,
 })
 
+-- Set up manual Claude completion
+require('claude_manual_completion').setup()
+
 require('our_cmp')
 require('lsp')
 -- require('copilot_config')  -- Disabled in favor of Claude
