@@ -1,4 +1,9 @@
-require('copilot').setup({
+local copilot_ok, copilot = pcall(require, 'copilot')
+if not copilot_ok then
+  return
+end
+
+copilot.setup({
   panel = {
     enabled = false, -- disable in favor of cmp
     auto_refresh = false,
@@ -43,4 +48,8 @@ require('copilot').setup({
   server_opts_overrides = {},
 })
 
-require("copilot_cmp").setup()
+-- Setup copilot_cmp if available
+local ok, copilot_cmp = pcall(require, "copilot_cmp")
+if ok then
+  copilot_cmp.setup()
+end
