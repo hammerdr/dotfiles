@@ -17,6 +17,8 @@ return require('packer').startup(function()
 
   use 'neovim/nvim-lspconfig'
   use 'navarasu/onedark.nvim'
+  use 'williamboman/mason.nvim'
+  use 'williamboman/mason-lspconfig.nvim'
 
   use {
     "folke/trouble.nvim",

@@ -13,6 +13,7 @@ require('claude_completion').setup({
 require('claude_manual_completion').setup()
 
 require('our_cmp')
+require('mason_config')
 require('lsp')
 -- require('copilot_config')  -- Disabled in favor of Claude
 require('our_lint')
