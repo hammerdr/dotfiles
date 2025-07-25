@@ -21,6 +21,9 @@ require('treesitter')
 require('our_telescope')
 require('codeowners')
 
+-- File watcher utility
+require('file_watcher').setup()
+
 -- Claude integration (using synchronous version that works)
 require('claude_sync').setup({
   model = 'sonnet',

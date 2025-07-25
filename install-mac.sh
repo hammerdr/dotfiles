@@ -142,6 +142,14 @@ print_info "Installing Neovim configuration..."
 cp -r .config/* ~/.config/
 print_progress "Neovim configuration installed"
 
+# Copy Ghostty configuration
+if [ -d .config/ghostty ]; then
+    print_info "Installing Ghostty configuration..."
+    mkdir -p ~/.config/ghostty
+    cp .config/ghostty/config ~/.config/ghostty/config
+    print_progress "Ghostty configuration installed"
+fi
+
 if [ "$NVIM_ONLY" = false ]; then
     # Symlink shell configuration
     print_info "Installing shell configuration..."

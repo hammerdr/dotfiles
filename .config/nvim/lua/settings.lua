@@ -54,7 +54,7 @@ vim.api.nvim_create_autocmd('BufEnter', {
 
 -- 2 spaces for selected filetypes
 vim.api.nvim_create_autocmd('FileType', {
-  pattern = { 'xml', 'html', 'xhtml', 'css', 'scss', 'typescript', 'javascript', 'typescriptreact', 'javascriptreact', 'tsx', 'jsx', 'lua', 'yaml' },
+  pattern = { 'xml', 'html', 'xhtml', 'css', 'scss', 'typescript', 'javascript', 'typescriptreact', 'javascriptreact', 'tsx', 'jsx', 'lua', 'yaml', 'elixir', 'eelixir', 'heex', 'surface' },
   callback = function()
     vim.opt_local.shiftwidth = 2
     vim.opt_local.tabstop = 2

@@ -53,5 +53,6 @@ return require('packer').startup(function()
   use { 'gbrlsnchs/telescope-lsp-handlers.nvim' }
   use { 'dhruvasagar/vim-table-mode' }
   use { 'pmizio/typescript-tools.nvim' }
+  use { 'elixir-editors/vim-elixir' }
 
 end)

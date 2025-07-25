@@ -1,0 +1,5 @@
+maximize = true
+fullscreen = true
+clipboard-read = allow
+clipboard-write = allow
+theme = Snazzy
