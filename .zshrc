@@ -102,6 +102,73 @@ fi
 
 export PATH="$PATH:$HOME/nvim/bin:$HOME/.cargo/bin:$HOME/node_modules/opencode-ai/bin"
 
+# SSH Session Management for persistent connections
+export SSH_MODE="${SSH_MODE:-local}"
+export REMOTE_HOST="${REMOTE_HOST:-coder.hammer-default}"  # Default to your coder instance
+
+# Function to connect to remote server
+remote() {
+    if [[ -z "$REMOTE_HOST" ]]; then
+        echo "Please set REMOTE_HOST environment variable first:"
+        echo "export REMOTE_HOST='user@hostname'"
+        return 1
+    fi
+    
+    export SSH_MODE="remote"
+    echo "Switching to remote mode: $REMOTE_HOST"
+    
+    # Check if master connection exists and is alive
+    if ssh -O check "$REMOTE_HOST" 2>/dev/null; then
+        echo "Using existing connection to $REMOTE_HOST"
+    else
+        echo "Establishing new connection to $REMOTE_HOST..."
+    fi
+    
+    ssh "$REMOTE_HOST" || {
+        echo "Connection failed. Trying to reconnect..."
+        ssh-reconnect
+    }
+}
+
+# Function to switch back to local mode
+local() {
+    export SSH_MODE="local"
+    echo "Switched to local mode"
+}
+
+# Function to force reconnect SSH
+ssh-reconnect() {
+    if [[ -z "$REMOTE_HOST" ]]; then
+        echo "No REMOTE_HOST set"
+        return 1
+    fi
+    
+    echo "Forcing reconnection to $REMOTE_HOST..."
+    ssh -O exit "$REMOTE_HOST" 2>/dev/null || true
+    sleep 1
+    ssh "$REMOTE_HOST"
+}
+
+# Function to check SSH connection status
+ssh-status() {
+    if [[ -z "$REMOTE_HOST" ]]; then
+        echo "No REMOTE_HOST set"
+        return 1
+    fi
+    
+    if ssh -O check "$REMOTE_HOST" 2>/dev/null; then
+        echo "✓ Connected to $REMOTE_HOST"
+    else
+        echo "✗ Not connected to $REMOTE_HOST"
+    fi
+}
+
+# Auto-connect for new remote tabs/panes
+if [[ "$SSH_MODE" == "remote" && -z "$SSH_CONNECTION" && -n "$REMOTE_HOST" ]]; then
+    echo "Auto-connecting to remote session..."
+    remote
+fi
+
 # fzf configuration
 if command -v fzf >/dev/null 2>&1; then
   # fzf key bindings and fuzzy completion

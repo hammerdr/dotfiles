@@ -155,6 +155,15 @@ if [ "$NVIM_ONLY" = false ]; then
     else
         print_progress "zsh-syntax-highlighting already installed"
     fi
+    
+    # Setup SSH persistence
+    print_info "Setting up SSH persistence..."
+    if [ -f "setup-ssh-persistence.sh" ]; then
+        ./setup-ssh-persistence.sh
+        print_progress "SSH persistence configured"
+    else
+        print_info "SSH persistence setup script not found - skipping"
+    fi
 fi
 
 # Install dotfiles

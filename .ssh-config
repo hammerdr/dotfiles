@@ -1,0 +1,21 @@
+Host *
+    AddKeysToAgent yes
+    IdentityFile ~/.ssh/coder
+    # Connection multiplexing for persistent connections
+    ControlMaster auto
+    ControlPath ~/.ssh/sockets/%r@%h-%p
+    ControlPersist 600
+    # Keep connections alive to prevent timeouts
+    ServerAliveInterval 30
+    ServerAliveCountMax 3
+    # Performance optimizations
+    Compression yes
+    TCPKeepAlive yes
+    # Faster connection establishment
+    HashKnownHosts no
+    StrictHostKeyChecking accept-new
+
+# Your coder instance (pre-configured)
+Host coder.hammer-default
+    # Connection multiplexing will be handled by the global settings above
+    # Add any specific settings for this host here if needed

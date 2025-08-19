@@ -3,3 +3,11 @@ fullscreen = true
 clipboard-read = allow
 clipboard-write = allow
 theme = Snazzy
+
+# SSH Modal keybindings
+# Cmd+Shift+R: New tab in remote mode
+keybind = cmd+shift+r=new_tab
+# Cmd+Shift+L: New tab in local mode  
+keybind = cmd+shift+l=new_tab
+# Cmd+Shift+T: New tab (normal)
+keybind = cmd+shift+t=new_tab
