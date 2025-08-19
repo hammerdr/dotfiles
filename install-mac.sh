@@ -78,6 +78,11 @@ if [ "$NVIM_ONLY" = false ]; then
     brew install neovim
     print_progress "Neovim installed"
 
+    # Install fzf
+    print_info "Installing fzf..."
+    brew install fzf
+    print_progress "fzf installed"
+
     # Install Node.js if not present
     if ! command -v node &> /dev/null; then
         print_info "Installing Node.js..."
@@ -124,6 +129,32 @@ if [ "$NVIM_ONLY" = false ]; then
 
     pip3 install python-lsp-ruff
     print_progress "python-lsp-ruff installed"
+
+    # Install fzf key bindings and completion
+    print_info "Setting up fzf key bindings and completion..."
+    $(brew --prefix)/opt/fzf/install --key-bindings --completion --no-update-rc
+    print_progress "fzf key bindings and completion configured"
+
+    # Install oh-my-zsh plugins
+    print_info "Installing oh-my-zsh plugins..."
+    
+    # Install zsh-autosuggestions
+    if [ ! -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions" ]; then
+        print_info "Installing zsh-autosuggestions..."
+        git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+        print_progress "zsh-autosuggestions installed"
+    else
+        print_progress "zsh-autosuggestions already installed"
+    fi
+    
+    # Install zsh-syntax-highlighting
+    if [ ! -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting" ]; then
+        print_info "Installing zsh-syntax-highlighting..."
+        git clone https://github.com/zsh-users/zsh-syntax-highlighting ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+        print_progress "zsh-syntax-highlighting installed"
+    else
+        print_progress "zsh-syntax-highlighting already installed"
+    fi
 fi
 
 # Install dotfiles

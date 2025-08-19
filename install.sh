@@ -66,8 +66,8 @@ if [ "$NVIM_ONLY" = false ]; then
     print_progress "Package lists updated"
 
     # Install system packages
-    print_info "Installing system packages (silver searcher, neovim)..."
-    sudo apt-get install -y silversearcher-ag neovim
+    print_info "Installing system packages (silver searcher, neovim, fzf)..."
+    sudo apt-get install -y silversearcher-ag neovim fzf
     print_progress "System packages installed"
 
     # Install Node.js packages if npm is available
@@ -105,6 +105,38 @@ if [ "$NVIM_ONLY" = false ]; then
     else
         print_error "pip3 not found - skipping Python packages"
         print_info "Please install Python 3 and pip3, then run this script again"
+    fi
+
+    # Install fzf key bindings and completion
+    print_info "Setting up fzf key bindings and completion..."
+    if [ -f /usr/share/doc/fzf/examples/key-bindings.zsh ]; then
+        echo "# fzf key bindings and completion" >> ~/.zshrc.fzf
+        echo "source /usr/share/doc/fzf/examples/key-bindings.zsh" >> ~/.zshrc.fzf
+        echo "source /usr/share/doc/fzf/examples/completion.zsh" >> ~/.zshrc.fzf
+        print_progress "fzf key bindings configured"
+    else
+        print_info "fzf key bindings not found - they may be in a different location"
+    fi
+
+    # Install oh-my-zsh plugins
+    print_info "Installing oh-my-zsh plugins..."
+
+    # Install zsh-autosuggestions
+    if [ ! -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions" ]; then
+        print_info "Installing zsh-autosuggestions..."
+        git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+        print_progress "zsh-autosuggestions installed"
+    else
+        print_progress "zsh-autosuggestions already installed"
+    fi
+
+    # Install zsh-syntax-highlighting
+    if [ ! -d "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting" ]; then
+        print_info "Installing zsh-syntax-highlighting..."
+        git clone https://github.com/zsh-users/zsh-syntax-highlighting ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+        print_progress "zsh-syntax-highlighting installed"
+    else
+        print_progress "zsh-syntax-highlighting already installed"
     fi
 fi
 

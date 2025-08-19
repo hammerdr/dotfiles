@@ -55,4 +55,12 @@ return require('packer').startup(function()
   use { 'pmizio/typescript-tools.nvim' }
   use { 'elixir-editors/vim-elixir' }
 
+  use {
+    'NickvanDyke/opencode.nvim',
+    requires = 'nvim-lua/plenary.nvim',
+    config = function()
+      require('opencode_config')
+    end
+  }
+
 end)
