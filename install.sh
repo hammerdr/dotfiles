@@ -193,6 +193,22 @@ if [ "$NVIM_ONLY" = false ]; then
         ln -sf "$PWD/.claude" ~/.claude
         print_progress "Claude configuration installed"
     fi
+
+    # Symlink opencode configuration
+    if [ -d .opencode ]; then
+        print_info "Installing opencode configuration..."
+        if [ -d ~/.opencode ] && [ ! -L ~/.opencode ]; then
+            print_info "Backing up existing .opencode directory to .opencode.backup"
+            mv ~/.opencode ~/.opencode.backup
+        fi
+        ln -sf "$PWD/.opencode" ~/.opencode
+        print_progress "opencode configuration installed"
+        
+        if [ -d .opencode/agents ]; then
+            AGENT_COUNT=$(find .opencode/agents -name "*.md" | wc -l)
+            print_progress "Installed $AGENT_COUNT custom agent(s)"
+        fi
+    fi
 fi
 
 echo
