@@ -22,8 +22,6 @@ o.softtabstop = 4
 o.tabstop = 4
 o.autoindent = true
 
-o.hidden = true
-
 o.list = true
 o.listchars = 'tab:» ,extends:›,precedes:‹,nbsp:·,trail:·'
 
@@ -34,8 +32,11 @@ require('onedark').setup {
 }
 require('onedark').load()
 
+local augroup = vim.api.nvim_create_augroup('user_settings', { clear = true })
+
 -- Remove whitespace on save
 vim.api.nvim_create_autocmd('BufWritePre', {
+  group = augroup,
   pattern = '*',
   callback = function()
     local save_cursor = vim.fn.getpos('.')
@@ -46,6 +47,7 @@ vim.api.nvim_create_autocmd('BufWritePre', {
 
 -- Don't auto commenting new lines
 vim.api.nvim_create_autocmd('BufEnter', {
+  group = augroup,
   pattern = '*',
   callback = function()
     vim.opt.formatoptions:remove({ 'c', 'r', 'o' })
@@ -54,6 +56,7 @@ vim.api.nvim_create_autocmd('BufEnter', {
 
 -- 2 spaces for selected filetypes
 vim.api.nvim_create_autocmd('FileType', {
+  group = augroup,
   pattern = { 'xml', 'html', 'xhtml', 'css', 'scss', 'typescript', 'javascript', 'typescriptreact', 'javascriptreact', 'tsx', 'jsx', 'lua', 'yaml', 'elixir', 'eelixir', 'heex', 'surface' },
   callback = function()
     vim.opt_local.shiftwidth = 2
@@ -65,9 +68,9 @@ vim.api.nvim_create_user_command('A', function()
   local ext = vim.fn.expand('%:e')
   if ext == 'css' then
     local newfile = vim.fn.expand('%:p:r:r') .. '.tsx'
-    vim.cmd('e ' .. newfile)
+    vim.cmd.edit(vim.fn.fnameescape(newfile))
   else
     local newfile = vim.fn.expand('%:p:r') .. '.module.css'
-    vim.cmd('e ' .. newfile)
+    vim.cmd.edit(vim.fn.fnameescape(newfile))
   end
 end, {})

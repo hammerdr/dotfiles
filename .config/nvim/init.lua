@@ -4,7 +4,6 @@ require('settings')
 -- Set up Claude completion before cmp
 require('claude_completion').setup({
   model = 'sonnet',
-  claude_path = '/opt/homebrew/bin/claude',
   max_context_lines = 15,
   min_trigger_length = 2,
 })
@@ -27,5 +26,4 @@ require('file_watcher').setup()
 -- Claude integration (using synchronous version that works)
 require('claude_sync').setup({
   model = 'sonnet',
-  claude_path = '/opt/homebrew/bin/claude',
 })

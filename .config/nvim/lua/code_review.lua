@@ -1,13 +1,11 @@
 local M = {}
 
-local telescope = require('telescope')
 local pickers = require('telescope.pickers')
 local finders = require('telescope.finders')
 local conf = require('telescope.config').values
 local actions = require('telescope.actions')
 local action_state = require('telescope.actions.state')
 local previewers = require('telescope.previewers')
-local utils = require('telescope.utils')
 
 -- Function to get git diff for a file
 local function get_file_diff(file)
@@ -72,7 +70,7 @@ local function diff_previewer(opts)
             vim.schedule(function()
                 if vim.api.nvim_buf_is_valid(self.state.bufnr) then
                     vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, diff)
-                    vim.api.nvim_buf_set_option(self.state.bufnr, 'filetype', 'diff')
+                    vim.bo[self.state.bufnr].filetype = 'diff'
                 end
             end)
         end
@@ -112,7 +110,7 @@ function M.review_changes(opts)
                 if selection then
                     actions.close(prompt_bufnr)
                     -- Open the file in a split
-                    vim.cmd('vsplit ' .. selection.value)
+                    vim.cmd.vsplit(vim.fn.fnameescape(selection.value))
                     -- Open fugitive's Gdiff for side-by-side comparison
                     vim.cmd('Gdiffsplit')
                 end
@@ -187,7 +185,7 @@ function M.review_commits(opts)
                     
                     if vim.api.nvim_buf_is_valid(self.state.bufnr) then
                         vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, lines)
-                        vim.api.nvim_buf_set_option(self.state.bufnr, 'filetype', 'diff')
+                        vim.bo[self.state.bufnr].filetype = 'diff'
                     end
                 end)
             end
@@ -263,7 +261,7 @@ function M.review_branch_diff(opts)
                     
                     if vim.api.nvim_buf_is_valid(self.state.bufnr) then
                         vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, lines)
-                        vim.api.nvim_buf_set_option(self.state.bufnr, 'filetype', 'diff')
+                        vim.bo[self.state.bufnr].filetype = 'diff'
                     end
                 end)
             end
@@ -273,7 +271,7 @@ function M.review_branch_diff(opts)
                 local selection = action_state.get_selected_entry()
                 if selection then
                     actions.close(prompt_bufnr)
-                    vim.cmd('edit ' .. selection.value)
+                    vim.cmd.edit(vim.fn.fnameescape(selection.value))
                     vim.cmd('Gdiffsplit ' .. base_branch .. ':' .. selection.value)
                 end
             end)

@@ -5,7 +5,7 @@ local timer = nil
 local check_interval = 1000 -- Check every 1 second
 
 local function get_file_mtime(filepath)
-  local stat = vim.loop.fs_stat(filepath)
+  local stat = vim.uv.fs_stat(filepath)
   return stat and stat.mtime.sec or 0
 end
 
@@ -15,7 +15,7 @@ local function reload_buffer(bufnr, filepath)
   end
   
   -- Check if buffer has unsaved changes
-  if vim.api.nvim_buf_get_option(bufnr, 'modified') then
+  if vim.bo[bufnr].modified then
     vim.notify("Buffer has unsaved changes, skipping reload: " .. filepath, vim.log.levels.WARN)
     return true
   end
@@ -40,7 +40,7 @@ local function reload_buffer(bufnr, filepath)
   vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
   
   -- Reset modified flag
-  vim.api.nvim_buf_set_option(bufnr, 'modified', false)
+  vim.bo[bufnr].modified = false
   
   vim.notify("Reloaded: " .. vim.fn.fnamemodify(filepath, ':t'), vim.log.levels.INFO)
   return true
@@ -77,7 +77,7 @@ function M.start_watching()
     return
   end
   
-  if not vim.loop.fs_stat(filepath) then
+  if not vim.uv.fs_stat(filepath) then
     vim.notify("File does not exist: " .. filepath, vim.log.levels.ERROR)
     return
   end
@@ -95,7 +95,7 @@ function M.start_watching()
   
   -- Start timer if not already running
   if not timer then
-    timer = vim.loop.new_timer()
+    timer = vim.uv.new_timer()
     timer:start(check_interval, check_interval, vim.schedule_wrap(check_files))
   end
   

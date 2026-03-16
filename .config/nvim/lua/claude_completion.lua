@@ -3,7 +3,7 @@ local M = {}
 -- Configuration
 M.config = {
   model = "sonnet",
-  claude_path = "/opt/homebrew/bin/claude",
+  claude_path = vim.fn.exepath("claude") ~= "" and vim.fn.exepath("claude") or "claude",
   max_context_lines = 20,
   completion_timeout = 5000, -- 5 seconds
   min_trigger_length = 3,

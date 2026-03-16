@@ -110,11 +110,11 @@ vim.keymap.set('n', '<leader>gD', function()
     end)
 end, { desc = 'Review branch diff with custom base' })
 
-function FindIn(search_dir)
+local function find_in(search_dir)
   require('telescope.builtin').live_grep({default_text = " ", search_dirs = { search_dir }})
 end
 
-vim.api.nvim_create_user_command('FindIn', 'lua FindIn(<q-args>)', { nargs = 1, complete = "file" })
+vim.api.nvim_create_user_command('FindIn', function(args) find_in(args.args) end, { nargs = 1, complete = "file" })
 
 -- LSP integrations
 vim.keymap.set('n', '<leader>lr', builtin.lsp_references, { desc = 'LSP references' })
@@ -130,16 +130,41 @@ vim.keymap.set('n', '<leader>ts', builtin.treesitter, { desc = 'Treesitter symbo
 
 -- Trouble.nvim integration
 vim.keymap.set('n', '<leader>tt', function()
-  require('trouble').toggle()
+  require('trouble').toggle({ mode = 'diagnostics' })
 end, { desc = 'Toggle Trouble' })
 
 vim.keymap.set('n', '<leader>tw', function()
-  require('trouble').toggle('workspace_diagnostics')
+  require('trouble').open({ mode = 'diagnostics' })
 end, { desc = 'Trouble workspace diagnostics' })
 
 vim.keymap.set('n', '<leader>td', function()
-  require('trouble').toggle('document_diagnostics')
+  require('trouble').open({ mode = 'diagnostics', filter = { buf = 0 } })
 end, { desc = 'Trouble document diagnostics' })
+
+vim.keymap.set('n', '<leader>tl', function()
+  require('trouble').open({ mode = 'lsp' })
+end, { desc = 'Trouble LSP definitions/references' })
+
+vim.keymap.set('n', '<leader>tq', function()
+  require('trouble').open({ mode = 'quickfix' })
+end, { desc = 'Trouble quickfix' })
+
+vim.keymap.set('n', '<leader>tn', function()
+  require('trouble').next({ skip_groups = true, jump = true })
+end, { desc = 'Trouble next item' })
+
+vim.keymap.set('n', '<leader>tp', function()
+  require('trouble').prev({ skip_groups = true, jump = true })
+end, { desc = 'Trouble prev item' })
+
+-- Also wire ]d/[d through Trouble when the window is open
+vim.keymap.set('n', ']t', function()
+  require('trouble').next({ skip_groups = true, jump = true })
+end, { desc = 'Next trouble item' })
+
+vim.keymap.set('n', '[t', function()
+  require('trouble').prev({ skip_groups = true, jump = true })
+end, { desc = 'Previous trouble item' })
 
 -- Vim-fugitive enhanced integrations
 vim.keymap.set('n', '<leader>gB', function()

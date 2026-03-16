@@ -5,10 +5,7 @@ return require('packer').startup(function()
   use 'vim-airline/vim-airline'
   use 'vim-airline/vim-airline-themes'
   use 'tpope/vim-endwise'
-  use 'ap/vim-css-color'
-  use 'mileszs/ack.vim'
   use 'andrewradev/splitjoin.vim'
-  use 'simrat39/rust-tools.nvim'
 
   use {
     'nvim-treesitter/nvim-treesitter',
@@ -22,9 +19,29 @@ return require('packer').startup(function()
 
   use {
     "folke/trouble.nvim",
-    requires = "kyazdani42/nvim-web-devicons",
+    requires = "nvim-tree/nvim-web-devicons",
     config = function()
-      require("trouble").setup {}
+      require("trouble").setup {
+        auto_close = false,     -- keep panel open even when no diagnostics
+        auto_open = false,      -- we handle opening via autocmd below
+        auto_refresh = true,    -- refresh diagnostics automatically
+        auto_preview = true,    -- show preview when navigating items
+        focus = false,          -- don't steal focus from the editor
+        follow = true,          -- follow the current item
+        open_no_results = true, -- keep window open even with no results
+        warn_no_results = false,
+        win = {
+          type = "split",
+          position = "bottom",
+          size = { height = 10 },
+        },
+        modes = {
+          diagnostics = {
+            auto_open = true,   -- auto-open when diagnostics exist
+            auto_close = false, -- stay open even when cleared
+          },
+        },
+      }
     end
   }
 
@@ -47,13 +64,9 @@ return require('packer').startup(function()
   }
 
   use { 'discord/vim-codeowners' }
-  use { "zbirenbaum/copilot.lua" }
-  use { "zbirenbaum/copilot-cmp", after = { "copilot.lua" } }
-  use { "L3MON4D3/LuaSnip" }
   use { 'gbrlsnchs/telescope-lsp-handlers.nvim' }
   use { 'dhruvasagar/vim-table-mode' }
   use { 'pmizio/typescript-tools.nvim' }
-  use { 'elixir-editors/vim-elixir' }
 
   use {
     'NickvanDyke/opencode.nvim',

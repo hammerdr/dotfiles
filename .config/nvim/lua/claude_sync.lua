@@ -3,7 +3,7 @@ local M = {}
 -- Configuration
 M.config = {
   model = "sonnet",
-  claude_path = "/opt/homebrew/bin/claude",
+  claude_path = vim.fn.exepath("claude") ~= "" and vim.fn.exepath("claude") or "claude",
 }
 
 -- Function to get selected text or current context
@@ -97,9 +97,9 @@ local function show_result(prompt, context_info, result)
   
   -- Set buffer properties
   vim.api.nvim_buf_set_name(buf, "*Claude Result*")
-  vim.api.nvim_buf_set_option(buf, 'buftype', 'nofile')
-  vim.api.nvim_buf_set_option(buf, 'filetype', 'markdown')
-  vim.api.nvim_buf_set_option(buf, 'modifiable', true)
+  vim.bo[buf].buftype = 'nofile'
+  vim.bo[buf].filetype = 'markdown'
+  vim.bo[buf].modifiable = true
   
   -- Prepare content
   local lines = {}
@@ -143,7 +143,7 @@ local function show_result(prompt, context_info, result)
   
   -- Set content
   vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
-  vim.api.nvim_buf_set_option(buf, 'modifiable', false)
+  vim.bo[buf].modifiable = false
   
   -- Set up key mappings for the result buffer
   local opts = { buffer = buf, silent = true }
