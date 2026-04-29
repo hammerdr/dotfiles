@@ -265,8 +265,14 @@ if command -v kubectl >/dev/null 2>&1; then
   alias ktop='kubectl top pods'
   alias ktopn='kubectl top nodes'
 
+  # Note: function definitions below use `function NAME { ... }` form rather
+  # than `NAME() { ... }`. The latter triggers alias expansion at parse time,
+  # which fails when the kubectl plugin has already aliased the same name
+  # (and an `unalias` in this same block runs too late, since the whole file
+  # is parsed before any of it executes).
+
   # Internal helper: pick a pod in the current namespace via fzf
-  _kfzf_pod() {
+  function _kfzf_pod {
     if ! command -v fzf >/dev/null 2>&1; then
       echo "fzf is required for this helper" >&2
       return 1
@@ -277,7 +283,7 @@ if command -v kubectl >/dev/null 2>&1; then
   }
 
   # Tail logs of an interactively selected pod
-  klog() {
+  function klog {
     local pod
     pod=$(_kfzf_pod) || return
     [[ -z "$pod" ]] && return
@@ -285,7 +291,7 @@ if command -v kubectl >/dev/null 2>&1; then
   }
 
   # Exec a shell into an interactively selected pod (default: /bin/bash)
-  kssh() {
+  function kssh {
     local pod shell
     pod=$(_kfzf_pod) || return
     [[ -z "$pod" ]] && return
@@ -294,7 +300,7 @@ if command -v kubectl >/dev/null 2>&1; then
   }
 
   # Describe an interactively selected pod (overrides kubectl plugin's kdp alias)
-  kdp() {
+  function kdp {
     local pod
     pod=$(_kfzf_pod) || return
     [[ -z "$pod" ]] && return
@@ -303,7 +309,7 @@ if command -v kubectl >/dev/null 2>&1; then
 
   # Port-forward an interactively selected pod (overrides kubectl plugin's kpf alias)
   # Usage: kpf <local-port>:<remote-port>
-  kpf() {
+  function kpf {
     if [[ $# -lt 1 ]]; then
       echo "Usage: kpf <local-port>:<remote-port>"
       return 1
@@ -315,7 +321,7 @@ if command -v kubectl >/dev/null 2>&1; then
   }
 
   # Delete an interactively selected pod
-  kdpod() {
+  function kdpod {
     local pod
     pod=$(_kfzf_pod) || return
     [[ -z "$pod" ]] && return
@@ -323,7 +329,7 @@ if command -v kubectl >/dev/null 2>&1; then
   }
 
   # Switch namespace via fzf
-  knsf() {
+  function knsf {
     if ! command -v fzf >/dev/null 2>&1; then
       echo "fzf is required for knsf" >&2
       return 1
@@ -340,7 +346,7 @@ if command -v kubectl >/dev/null 2>&1; then
   }
 
   # Switch context via fzf
-  kctxf() {
+  function kctxf {
     if ! command -v fzf >/dev/null 2>&1; then
       echo "fzf is required for kctxf" >&2
       return 1
