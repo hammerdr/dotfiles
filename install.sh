@@ -66,9 +66,21 @@ if [ "$NVIM_ONLY" = false ]; then
     print_progress "Package lists updated"
 
     # Install system packages
-    print_info "Installing system packages (silver searcher, neovim, fzf)..."
-    sudo apt-get install -y silversearcher-ag neovim fzf
+    print_info "Installing system packages (silver searcher, neovim, fzf, kubectx)..."
+    sudo apt-get install -y silversearcher-ag neovim fzf kubectx
     print_progress "System packages installed"
+
+    # Verify kubectx/kubens are available; fall back to manual install if not
+    if ! command -v kubectx &> /dev/null || ! command -v kubens &> /dev/null; then
+        print_info "kubectx/kubens not found via apt - installing from GitHub..."
+        sudo git clone https://github.com/ahmetb/kubectx /opt/kubectx 2>/dev/null || \
+            sudo git -C /opt/kubectx pull
+        sudo ln -sf /opt/kubectx/kubectx /usr/local/bin/kubectx
+        sudo ln -sf /opt/kubectx/kubens /usr/local/bin/kubens
+        print_progress "kubectx/kubens installed from GitHub"
+    else
+        print_progress "kubectx/kubens already available"
+    fi
 
     # Install Node.js packages if npm is available
     if command -v npm &> /dev/null; then

@@ -14,6 +14,7 @@ plugins=(
   colored-man-pages
   command-not-found
   history-substring-search
+  kubectl
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -53,6 +54,10 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 
+alias kpush='kubectl -n discord-push'     # info
+alias pushc='clyde elixir remote-console' # gets you into node
+alias cec='clyde elixir controller'       # controller
+
 # Git aliases (additional to oh-my-zsh git plugin)
 alias gst='git status'
 alias gco='git checkout'
@@ -73,13 +78,13 @@ alias ports='netstat -tulanp'
 if command -v fzf >/dev/null 2>&1; then
   # Find and edit files
   alias fe='nvim $(fzf)'
-  
+
   # Find and cd to directory
   alias fd='cd $(find . -type d | fzf)'
-  
+
   # Kill process with fzf
   alias fkill='kill -9 $(ps aux | fzf | awk "{print \$2}")'
-  
+
   # Search command history
   alias fhistory='eval $(history | fzf --tac --no-sort | sed "s/^[0-9 ]*//")'
 fi
@@ -113,17 +118,17 @@ remote() {
         echo "export REMOTE_HOST='user@hostname'"
         return 1
     fi
-    
+
     export SSH_MODE="remote"
     echo "Switching to remote mode: $REMOTE_HOST"
-    
+
     # Check if master connection exists and is alive
     if ssh -O check "$REMOTE_HOST" 2>/dev/null; then
         echo "Using existing connection to $REMOTE_HOST"
     else
         echo "Establishing new connection to $REMOTE_HOST..."
     fi
-    
+
     ssh "$REMOTE_HOST" || {
         echo "Connection failed. Trying to reconnect..."
         ssh-reconnect
@@ -142,7 +147,7 @@ ssh-reconnect() {
         echo "No REMOTE_HOST set"
         return 1
     fi
-    
+
     echo "Forcing reconnection to $REMOTE_HOST..."
     ssh -O exit "$REMOTE_HOST" 2>/dev/null || true
     sleep 1
@@ -155,7 +160,7 @@ ssh-status() {
         echo "No REMOTE_HOST set"
         return 1
     fi
-    
+
     if ssh -O check "$REMOTE_HOST" 2>/dev/null; then
         echo "✓ Connected to $REMOTE_HOST"
     else
@@ -173,10 +178,10 @@ fi
 if command -v fzf >/dev/null 2>&1; then
   # fzf key bindings and fuzzy completion
   [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-  
+
   # fzf default options
   export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border --inline-info'
-  
+
   # Use fd or find for fzf
   if command -v fd >/dev/null 2>&1; then
     export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
@@ -187,7 +192,7 @@ if command -v fzf >/dev/null 2>&1; then
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
     export FZF_ALT_C_COMMAND='find . -type d -not -path "*/\.git/*"'
   fi
-  
+
   # fzf + git functions
   fzf-git-branch() {
     git rev-parse HEAD > /dev/null 2>&1 || return
@@ -197,7 +202,7 @@ if command -v fzf >/dev/null 2>&1; then
           --preview 'git log -n 50 --color=always --date=short --pretty="format:%C(auto)%cd %h%d %s" $(sed "s/.* //" <<< {})' |
       sed "s/.* //"
   }
-  
+
   fzf-git-checkout() {
     git rev-parse HEAD > /dev/null 2>&1 || return
     local branch
@@ -212,7 +217,7 @@ if command -v fzf >/dev/null 2>&1; then
       git checkout $branch;
     fi
   }
-  
+
   # fzf history search
   fzf-history-widget() {
     local selected num
@@ -229,12 +234,125 @@ if command -v fzf >/dev/null 2>&1; then
     zle reset-prompt
     return $ret
   }
-  
+
   # Bind fzf functions to keys
   zle -N fzf-history-widget
   bindkey '^R' fzf-history-widget
-  
+
   # Aliases for fzf functions
   alias gb='fzf-git-checkout'
   alias fh='fzf-history-widget'
+fi
+
+# Kubernetes helpers (kubectx/kubens + fzf-powered shortcuts)
+# Note: oh-my-zsh's kubectl plugin already provides k, kgp, kgs, kgd, kl, klf,
+# kex, kaf, kdel, etc. The aliases/functions below layer on top of that.
+if command -v kubectl >/dev/null 2>&1; then
+  # The oh-my-zsh kubectl plugin defines several aliases (kdp, kpf, ...) that
+  # collide with the function names below. Drop them so our fzf-powered
+  # versions can take over. Errors silenced if the alias isn't present.
+  unalias kdp 2>/dev/null
+  unalias kpf 2>/dev/null
+
+  # Short aliases for kubectx / kubens
+  alias kx='kubectx'
+  alias kn='kubens'
+
+  # Extra kubectl shortcuts not covered by the oh-my-zsh kubectl plugin
+  alias kctx='kubectl config current-context'
+  alias kcns='kubectl config view --minify -o jsonpath="{..namespace}"; echo'
+  alias kwatch='kubectl get pods --watch'
+  alias ktop='kubectl top pods'
+  alias ktopn='kubectl top nodes'
+
+  # Internal helper: pick a pod in the current namespace via fzf
+  _kfzf_pod() {
+    if ! command -v fzf >/dev/null 2>&1; then
+      echo "fzf is required for this helper" >&2
+      return 1
+    fi
+    kubectl get pods --no-headers 2>/dev/null \
+      | fzf --height 50% --reverse --header='Select a pod' \
+      | awk '{print $1}'
+  }
+
+  # Tail logs of an interactively selected pod
+  klog() {
+    local pod
+    pod=$(_kfzf_pod) || return
+    [[ -z "$pod" ]] && return
+    kubectl logs -f "$pod" "$@"
+  }
+
+  # Exec a shell into an interactively selected pod (default: /bin/bash)
+  kssh() {
+    local pod shell
+    pod=$(_kfzf_pod) || return
+    [[ -z "$pod" ]] && return
+    shell="${1:-/bin/bash}"
+    kubectl exec -it "$pod" -- "$shell"
+  }
+
+  # Describe an interactively selected pod (overrides kubectl plugin's kdp alias)
+  kdp() {
+    local pod
+    pod=$(_kfzf_pod) || return
+    [[ -z "$pod" ]] && return
+    kubectl describe pod "$pod"
+  }
+
+  # Port-forward an interactively selected pod (overrides kubectl plugin's kpf alias)
+  # Usage: kpf <local-port>:<remote-port>
+  kpf() {
+    if [[ $# -lt 1 ]]; then
+      echo "Usage: kpf <local-port>:<remote-port>"
+      return 1
+    fi
+    local pod
+    pod=$(_kfzf_pod) || return
+    [[ -z "$pod" ]] && return
+    kubectl port-forward "$pod" "$@"
+  }
+
+  # Delete an interactively selected pod
+  kdpod() {
+    local pod
+    pod=$(_kfzf_pod) || return
+    [[ -z "$pod" ]] && return
+    kubectl delete pod "$pod"
+  }
+
+  # Switch namespace via fzf
+  knsf() {
+    if ! command -v fzf >/dev/null 2>&1; then
+      echo "fzf is required for knsf" >&2
+      return 1
+    fi
+    local ns
+    ns=$(kubectl get ns --no-headers -o custom-columns=:metadata.name \
+      | fzf --height 40% --reverse --header='Select a namespace')
+    [[ -z "$ns" ]] && return
+    if command -v kubens >/dev/null 2>&1; then
+      kubens "$ns"
+    else
+      kubectl config set-context --current --namespace="$ns"
+    fi
+  }
+
+  # Switch context via fzf
+  kctxf() {
+    if ! command -v fzf >/dev/null 2>&1; then
+      echo "fzf is required for kctxf" >&2
+      return 1
+    fi
+    local ctx
+    ctx=$(kubectl config get-contexts -o name \
+      | fzf --height 40% --reverse --header='Select a context')
+    [[ -z "$ctx" ]] && return
+    if command -v kubectx >/dev/null 2>&1; then
+      kubectx "$ctx"
+    else
+      kubectl config use-context "$ctx"
+    fi
+  }
 fi

@@ -83,6 +83,11 @@ if [ "$NVIM_ONLY" = false ]; then
     brew install fzf
     print_progress "fzf installed"
 
+    # Install kubectx (provides kubectx and kubens)
+    print_info "Installing kubectx/kubens..."
+    brew install kubectx
+    print_progress "kubectx/kubens installed"
+
     # Install Node.js if not present
     if ! command -v node &> /dev/null; then
         print_info "Installing Node.js..."
