@@ -223,6 +223,18 @@ if [ "$NVIM_ONLY" = false ]; then
             print_progress "Installed $AGENT_COUNT custom agent(s)"
         fi
     fi
+
+    # Symlink Pi coding agent configuration
+    if [ -d .pi/agent ]; then
+        print_info "Installing Pi configuration..."
+        mkdir -p ~/.pi
+        if [ -d ~/.pi/agent ] && [ ! -L ~/.pi/agent ]; then
+            print_info "Backing up existing ~/.pi/agent to ~/.pi/agent.backup"
+            mv ~/.pi/agent ~/.pi/agent.backup
+        fi
+        ln -sf "$PWD/.pi/agent" ~/.pi/agent
+        print_progress "Pi configuration installed"
+    fi
 fi
 
 echo

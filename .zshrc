@@ -105,7 +105,7 @@ if [[ "$(basename -- ${(%):-%x})" != "_clyde" ]]; then
   compdef _clyde clyde
 fi
 
-export PATH="$PATH:$HOME/nvim/bin:$HOME/.cargo/bin:$HOME/node_modules/opencode-ai/bin"
+export PATH="$PATH:$HOME/nvim/bin:$HOME/.cargo/bin:$HOME/node_modules/.bin:$HOME/node_modules/opencode-ai/bin"
 
 # SSH Session Management for persistent connections
 export SSH_MODE="${SSH_MODE:-local}"

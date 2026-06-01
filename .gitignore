@@ -5,3 +5,7 @@
 .opencode/bun.lock
 .opencode/.opencode
 .opencode/shell-snapshots
+.pi/agent/sessions
+.pi/agent/auth.json
+.pi/agent/npm
+.pi/agent/packages
