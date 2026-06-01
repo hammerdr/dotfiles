@@ -29,6 +29,23 @@ coders2() {
   ssh -R 8765:localhost:8765 coder.hammer2 -t 'zsh -ic "tmux -CC attach || tmux new-session -t discord"'
 }
 
+# --- Ghostty-friendly persistent sessions via zellij ---
+# tmux -CC control mode is iTerm2-only; ghostty needs a plain multiplexer.
+# zellij attach -c: attach to the named session if it exists, else create it.
+_coder_zellij() {
+  local host="$1" session="${2:-discord}"
+  ssh -R 8765:localhost:8765 "$host" -t \
+    "zsh -ic 'command -v zellij >/dev/null 2>&1 && zellij attach -c ${session} || { echo \"zellij not installed on ${host}; run: cargo install zellij OR see https://zellij.dev/documentation/installation\"; exec zsh -i; }'"
+}
+
+coderz() {
+  _coder_zellij coder.hammer-default "${1:-discord}"
+}
+
+coderz2() {
+  _coder_zellij coder.hammer2 "${1:-discord}"
+}
+
 wip() {
   git commit -m 'wip' --no-verify
 }
