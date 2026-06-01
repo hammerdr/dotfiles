@@ -1,8 +1,20 @@
 {
+  "lastChangelogVersion": "0.78.0",
   "defaultProvider": "anthropic",
-  "defaultModel": "claude-sonnet-4-20250514",
+  "defaultModel": "claude-opus-4-8",
   "defaultThinkingLevel": "medium",
   "theme": "dark",
+  "enabledModels": [
+    "claude-opus-4-8",
+    "claude-sonnet-4-5",
+    "claude-haiku-4-5"
+  ],
+  "thinkingBudgets": {
+    "minimal": 1024,
+    "low": 4096,
+    "medium": 10240,
+    "high": 32768
+  },
   "compaction": {
     "enabled": true,
     "reserveTokens": 16384,
@@ -12,7 +24,19 @@
     "enabled": true,
     "maxRetries": 3
   },
+  "warnings": {
+    "anthropicExtraUsage": false
+  },
   "skills": [
     "~/.claude/skills"
+  ],
+  "packages": [
+    "npm:pi-mcp-adapter",
+    "npm:@gotgenes/pi-subagents",
+    "npm:@juicesharp/rpiv-todo",
+    "npm:@juicesharp/rpiv-ask-user-question",
+    "npm:pi-lens",
+    "npm:pi-powerline-footer",
+    "npm:pi-tool-display"
   ]
 }

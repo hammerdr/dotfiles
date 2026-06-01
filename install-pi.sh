@@ -62,9 +62,39 @@ fi
 ln -sf "$SCRIPT_DIR/.pi/agent" "$PI_AGENT_DIR"
 print_progress "Pi configuration installed (~/.pi/agent -> dotfiles)"
 
+# Install Pi packages declared in settings.json
+# Keep this list in sync with the "packages" array in .pi/agent/settings.json.
+PI_PACKAGES=(
+    "npm:pi-mcp-adapter"                       # MCP bridge: one proxy tool, lazy-loaded servers
+    "npm:@gotgenes/pi-subagents"               # Claude Code-style autonomous sub-agents
+    "npm:@juicesharp/rpiv-todo"                # live todo overlay surviving /reload + compaction
+    "npm:@juicesharp/rpiv-ask-user-question"   # structured questionnaire with typed options
+    "npm:pi-lens"                              # real-time LSP, linters, formatters, type-checking
+    "npm:pi-powerline-footer"                  # powerline-style status bar
+    "npm:pi-tool-display"                      # compact tool rendering + diff + truncation
+)
+
+if [ -x "$PI_BIN" ] || command -v pi >/dev/null 2>&1; then
+    PI_CMD="$PI_BIN"
+    [ -x "$PI_CMD" ] || PI_CMD="pi"
+    for pkg in "${PI_PACKAGES[@]}"; do
+        print_info "Installing Pi package: $pkg"
+        if "$PI_CMD" install "$pkg" >/dev/null 2>&1; then
+            print_progress "Installed $pkg"
+        else
+            print_error "Failed to install $pkg (install manually: pi install $pkg)"
+        fi
+    done
+else
+    print_info "Skipping package install (pi binary not found yet)"
+fi
+
 echo
 echo "Pi setup complete. Authenticate with:"
 echo "  pi             # then /login for subscription providers"
 echo "  export ANTHROPIC_API_KEY=sk-ant-...  # or set an API key"
 echo
 echo "Make sure ~/node_modules/.bin is in your PATH (should be via .zshrc)."
+echo
+echo "MCP servers: add a .mcp.json (project) or ~/.config/mcp/mcp.json (global),"
+echo "then run /mcp inside pi. Servers are lazy-loaded only when their tools are used."

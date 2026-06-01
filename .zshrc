@@ -22,7 +22,11 @@ source $ZSH/oh-my-zsh.sh
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 coder-session() {
-  ssh coder.hammer-default -t 'zsh -ic "tmux -CC attach || tmux new-session -t discord"'
+  ssh -R 8765:localhost:8765 coder.hammer-default -t 'zsh -ic "tmux -CC attach || tmux new-session -t discord"'
+}
+
+coders2() {
+  ssh -R 8765:localhost:8765 coder.hammer2 -t 'zsh -ic "tmux -CC attach || tmux new-session -t discord"'
 }
 
 wip() {
@@ -136,7 +140,9 @@ remote() {
 }
 
 # Function to switch back to local mode
-local() {
+# NOTE: do NOT name this `local` -- that shadows the `local` keyword and
+# breaks gitstatus/p10k ("gitstatus failed to initialize").
+localmode() {
     export SSH_MODE="local"
     echo "Switched to local mode"
 }
@@ -362,3 +368,7 @@ if command -v kubectl >/dev/null 2>&1; then
     fi
   }
 fi
+
+source /Users/derek.hammer/.nix-profile/etc/profile.d/nix.sh
+
+export PATH="/opt/homebrew/bin:/Users/derek.hammer/dev/discord/.local/bin:$PATH"

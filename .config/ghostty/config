@@ -4,10 +4,16 @@ clipboard-read = allow
 clipboard-write = allow
 theme = Snazzy
 
-# SSH Modal keybindings
-# Cmd+Shift+R: New tab in remote mode
+# Custom keybindings
+# Cmd+Shift+R: New tab
 keybind = cmd+shift+r=new_tab
-# Cmd+Shift+L: New tab in local mode  
+# Cmd+Shift+L: New tab  
 keybind = cmd+shift+l=new_tab
 # Cmd+Shift+T: New tab (normal)
 keybind = cmd+shift+t=new_tab
+
+# Split pane keybindings
+# Cmd+D: Split horizontally
+keybind = cmd+d=new_split:right
+# Cmd+Shift+D: Split vertically  
+keybind = cmd+shift+d=new_split:down

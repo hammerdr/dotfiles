@@ -5,7 +5,13 @@
 .opencode/bun.lock
 .opencode/.opencode
 .opencode/shell-snapshots
+# Pi: runtime, package, and secret artifacts (config/settings.json stay tracked)
 .pi/agent/sessions
 .pi/agent/auth.json
 .pi/agent/npm
 .pi/agent/packages
+.pi/agent/git
+.pi/agent/bin
+.opencode/opencode.db
+.opencode/opencode.db-shm
+.opencode/opencode.db-wal
