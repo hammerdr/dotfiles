@@ -391,6 +391,8 @@ if command -v kubectl >/dev/null 2>&1; then
   }
 fi
 
-source /Users/derek.hammer/.nix-profile/etc/profile.d/nix.sh
+# macOS-local setup (guarded so the remote/Linux shells don't error).
+[ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ] && source "$HOME/.nix-profile/etc/profile.d/nix.sh"
 
-export PATH="/opt/homebrew/bin:/Users/derek.hammer/dev/discord/.local/bin:$PATH"
+[ -d /opt/homebrew/bin ] && export PATH="/opt/homebrew/bin:$PATH"
+[ -d "$HOME/dev/discord/.local/bin" ] && export PATH="$HOME/dev/discord/.local/bin:$PATH"
