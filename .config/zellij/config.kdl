@@ -1,0 +1,19 @@
+// Zellij config — installed on coder machines via install.sh (cp .config/*).
+// Goal: persistent, ghostty-friendly sessions with the session name clearly
+// visible. The "compact" layout's bar shows the current session name, which
+// pairs with the per-host names set by coderz/coderz2 in .zshrc.
+
+// Compact bar shows "(session-name)" so you always know which box you're on.
+default_layout "compact"
+
+// Sensible defaults
+pane_frames true
+mouse_mode true
+copy_on_select true
+scroll_buffer_size 50000
+
+// Don't nag about new sessions / keep startup quiet.
+session_serialization true
+
+// Use a clean theme.
+theme "default"

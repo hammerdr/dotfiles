@@ -32,18 +32,23 @@ coders2() {
 # --- Ghostty-friendly persistent sessions via zellij ---
 # tmux -CC control mode is iTerm2-only; ghostty needs a plain multiplexer.
 # zellij attach -c: attach to the named session if it exists, else create it.
+# Session names are per-host so `zellij list-sessions` and the ghostty tab
+# title are distinguishable (override by passing a name: `coderz mywork`).
 _coder_zellij() {
-  local host="$1" session="${2:-discord}"
+  local host="$1" session="$2"
+  # Set the ghostty tab/window title up front (OSC 2) so it reads nicely
+  # even before zellij paints its bar.
+  printf '\033]2;coder · %s\007' "$session"
   ssh -R 8765:localhost:8765 "$host" -t \
     "zsh -ic 'command -v zellij >/dev/null 2>&1 && zellij attach -c ${session} || { echo \"zellij not installed on ${host}; run: cargo install zellij OR see https://zellij.dev/documentation/installation\"; exec zsh -i; }'"
 }
 
 coderz() {
-  _coder_zellij coder.hammer-default "${1:-discord}"
+  _coder_zellij coder.hammer-default "${1:-hammer-default}"
 }
 
 coderz2() {
-  _coder_zellij coder.hammer2 "${1:-discord}"
+  _coder_zellij coder.hammer2 "${1:-hammer2}"
 }
 
 wip() {
