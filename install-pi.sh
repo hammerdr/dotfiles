@@ -26,10 +26,13 @@ if ! command -v npm &> /dev/null; then
     exit 1
 fi
 
-# Install locally to ~/node_modules (nix store npm prefix is read-only)
+# Install locally to ~/node_modules (nix store npm prefix is read-only).
 # This matches how opencode is installed on these machines.
+# Pin @latest so re-running this upgrades an older install -- older pi
+# versions install packages via `npm install -g` (which fails on the
+# read-only nix store); current pi installs them under ~/.pi/agent/npm.
 print_info "Installing Pi to ~/node_modules/..."
-npm install --prefix "$HOME" --ignore-scripts @earendil-works/pi-coding-agent
+npm install --prefix "$HOME" --ignore-scripts @earendil-works/pi-coding-agent@latest
 print_progress "Pi coding agent installed"
 
 # Verify the binary exists
