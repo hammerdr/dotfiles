@@ -258,6 +258,12 @@ if [ "$NVIM_ONLY" = false ]; then
 		print_info "Running install-pi.sh..."
 		bash install-pi.sh
 	fi
+
+	# Install k9s handoff-scan plugin + ElixirDeployment view (merges into existing k9s config)
+	if [ -f install-k9s.sh ]; then
+		print_info "Running install-k9s.sh..."
+		bash install-k9s.sh || print_error "install-k9s.sh failed"
+	fi
 fi
 
 echo

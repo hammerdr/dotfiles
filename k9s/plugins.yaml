@@ -1,0 +1,14 @@
+plugins:
+  # Live ring-wide Elixir handoff queues from Datadog (discovery.rebalancer.waiting by pod).
+  # Use on :elixirdeployments or a pods view; scans the current namespace.
+  handoff-scan:
+    shortCut: Shift-Q
+    description: Handoff ring (Datadog, live)
+    scopes:
+      - elixirdeployments
+      - pods
+    command: bash
+    background: false
+    args:
+      - -c
+      - "'__K9S_DIR__/scripts/handoff-scan.sh' \"$NAMESPACE\" 10"

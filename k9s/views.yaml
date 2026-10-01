@@ -1,0 +1,13 @@
+views:
+  # :elixirdeployments — live rollout progress from the EDC's status
+  discord.com/v1/elixirdeployments:
+    columns:
+      - NAME
+      - UPDATED:.status.pods_updated|R
+      - TOTAL:.status.pods_total|R
+      - IN-RING:.status.pods_in_ring|R
+      - SURGE-IDX:.status.current_surge_index|R
+      - HALTED:.status.halted
+      - PROGRESS:.status.conditions[?(@.type=="Progressing")].reason
+      - HANDOFFS:.status.conditions[?(@.type=="HandoffsPending")].reason
+      - AGE
